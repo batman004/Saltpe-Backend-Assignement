@@ -1,12 +1,12 @@
-import json
 from fastapi import APIRouter, status, HTTPException, Depends
 from fastapi.responses import JSONResponse
 from fastapi_sqlalchemy import db
-from api.users.endpoints.serializers import User, Login, UserOut, SystemUser
+from api.users.endpoints.serializers import User, Login
 from api.users.endpoints.models import User as UserModel
 from api.users.auth.hashing import Hash
 from api.users.auth.jwt import create_access_token, create_refresh_token
 from api.users.auth.utils import get_current_user
+from api.users.handlers.user_handler import UserSignupHandler
 
 # router object for handling api routes
 router = APIRouter()
@@ -59,24 +59,6 @@ async def get_me(user: dict = Depends(get_current_user)):
 
 @router.post("/signup", response_model=User, response_description="logout a user")
 def signup(user: User):
-
-    user_search = db.session.query(UserModel.email).filter_by(email=user.email).first()
-
-    if user_search is not None:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"User with email: '{user.email}' already exist",
-        )
-
-    db_user = UserModel(
-        first_name=user.first_name,
-        last_name=user.last_name,
-        email=user.email,
-        username=user.username,
-        password=Hash.bcrypt(user.password),
-        disabled=True,
-    )
-    db.session.add(db_user)
-    db.session.commit()
+    new_user = UserSignupHandler(user).add_user_to_db()
     created_user = {"user": user.first_name, "status": "created"}
     return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_user)
