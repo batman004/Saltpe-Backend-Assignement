@@ -16,3 +16,6 @@ class UserHandler:
 
     def generate_token(self):
         pass
+
+    def is_active(self):
+        pass

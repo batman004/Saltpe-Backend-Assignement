@@ -20,13 +20,13 @@ class DatabaseSettings(BaseSettings):
     DB_NAME: str = config["DB_NAME"]
 
 
-class ApiKeySettings(BaseSettings):
-    ACTIVE: str = "ACTIVE"
-    INACTIVE: str = "INACTIVE"
-    THRESHOLD: int = 5
+class JwtTokenSettings(BaseSettings):
+    JWT_SECRET_KEY: str = config["JWT_SECRET_KEY"]
+    JWT_REFRESH_SECRET_KEY: str = config["JWT_REFRESH_SECRET_KEY"]
+    ALGORITHM: str = "HS256"
 
 
-class Settings(CommonSettings, ServerSettings, DatabaseSettings, ApiKeySettings):
+class Settings(CommonSettings, JwtTokenSettings, ServerSettings, DatabaseSettings):
     pass
 
 
