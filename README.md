@@ -15,6 +15,8 @@ Routes | HTTP | Description
 **/user/me** | `GET` | Get user data for currently logged in user(based on token verification)
 **/user/signup** | `POST` | Signup a new user
 
+
+
 Sample payloads
 
 1. Logging in a user

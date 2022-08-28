@@ -1,5 +1,3 @@
-from glob import escape
-from turtle import up
 from fastapi import HTTPException, status
 from fastapi_sqlalchemy import db
 from api.users.endpoints.serializers import User, Login

@@ -9,7 +9,7 @@ from api.config import settings
 
 app = FastAPI()
 
-app.add_middleware(DBSessionMiddleware, db_url=settings.DB_URL)
+app.add_middleware(DBSessionMiddleware, db_url=settings.DB_URL_PROD)
 
 app.add_middleware(
     CORSMiddleware,

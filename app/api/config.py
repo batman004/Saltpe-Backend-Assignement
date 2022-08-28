@@ -16,7 +16,8 @@ class ServerSettings(BaseSettings):
 
 
 class DatabaseSettings(BaseSettings):
-    DB_URL: str = config["DB_URL"]
+    DB_URL_DEV: str = config["DB_URL_DEV"]
+    DB_URL_PROD: str = config["DB_URL_PROD"]
     DB_NAME: str = config["DB_NAME"]
 
 
