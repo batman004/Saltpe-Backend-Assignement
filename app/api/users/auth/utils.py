@@ -1,13 +1,10 @@
-from curses.ascii import US
-from re import U
-from typing import Union, Any
 from datetime import datetime
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from api.config import settings
 from jose import jwt
 from pydantic import ValidationError
-from api.users.endpoints.serializers import TokenPayload, SystemUser, User
+from api.users.endpoints.serializers import TokenPayload, User
 from api.users.endpoints.models import User
 from fastapi_sqlalchemy import db
 
@@ -20,7 +17,6 @@ def get_current_user(token: str = Depends(reuseable_oauth)):
             token, settings.JWT_SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
         token_data = TokenPayload(**payload)
-
         if datetime.fromtimestamp(token_data.exp) < datetime.now():
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -43,4 +39,4 @@ def get_current_user(token: str = Depends(reuseable_oauth)):
             detail="Could not find user",
         )
 
-    return {"username": user["username"], "email": user["email"]}
+    return {"username": user["username"], "email": user["email"], "token": token}

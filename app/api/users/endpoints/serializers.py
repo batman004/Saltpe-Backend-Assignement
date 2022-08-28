@@ -24,9 +24,5 @@ class UserOut(BaseModel):
 
 
 class TokenPayload(BaseModel):
-    sub: str = None
-    exp: int = None
-
-
-class SystemUser(UserOut):
-    password: str
+    sub: str
+    exp: int

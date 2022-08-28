@@ -1,10 +1,12 @@
+from glob import escape
+from turtle import up
 from fastapi import HTTPException, status
 from fastapi_sqlalchemy import db
 from api.users.endpoints.serializers import User, Login
 from api.users.endpoints.models import User as UserModel
 from api.users.auth.hashing import Hash
 from api.users.auth.jwt import create_access_token, create_refresh_token
-from api.users.auth.utils import get_current_user
+from api.users.utils.blacklist_tokens import add_blacklist_token
 import re
 
 
@@ -68,20 +70,83 @@ class UserSignupHandler:
                 raise db_user.error
 
 
-class UserLoginHandler(UserSignupHandler):
+class UserLoginHandler:
+    def __init__(self, user_login):
+        self.user_login = user_login
 
     # check if detailes entered are consistent with DB
-    def verify_form(self):
-        pass
-
-    # generate
-    def generate_token(self):
-        pass
+    def verify_credentials(self):
+        user_login = (
+            db.session.query(UserModel).filter_by(email=self.user_login.email).first()
+        )
+        if user_login is None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Incorrect email or password",
+            )
+        if not Hash.verify(user_login.password, self.user_login.password):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect password"
+            )
+        return True
 
     # check if user is already logged in
     def is_active(self):
-        pass
+        if self.verify_credentials():
+            user_active = (
+                db.session.query(UserModel.disabled)
+                .filter_by(email=self.user_login.email)
+                .first()
+            )
+            if user_active.disabled == False:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST, detail="already logged in"
+                )
+            else:
+                return False
 
-    # udate status of user in DB
-    def login_update_db(self):
-        pass
+    # generate token after validation and verification
+    def generate_token(self):
+        return {
+            "access_token": create_access_token(self.user_login.email),
+            "refresh_token": create_refresh_token(self.user_login.email),
+        }
+
+    def login_user(self):
+        if not self.is_active():
+            try:
+                user_active = (
+                    db.session.query(UserModel)
+                    .filter_by(email=self.user_login.email)
+                    .update({"disabled": False})
+                )
+                db.session.commit()
+                return self.generate_token()
+            except:
+                raise user_active.error
+
+
+class UserLogoutHandler:
+    def __init__(self, current_user):
+        self.current_user = current_user
+
+    def update_status(self):
+        try:
+            user_logout = (
+                db.session.query(UserModel)
+                .filter_by(email=self.current_user["email"])
+                .update({"disabled": True})
+            )
+            db.session.commit()
+            return True
+        except:
+            raise user_logout.error
+
+    def blacklist_token(self):
+        if add_blacklist_token(self.current_user["token"]):
+            return True
+
+    def logout_user(self):
+        if self.update_status() and self.blacklist_token():
+            user_out = {"user": self.current_user["username"], "status": "logged out"}
+        return user_out
