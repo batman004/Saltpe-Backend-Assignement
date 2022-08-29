@@ -1,8 +1,8 @@
 from pickle import FALSE
 from pydantic import BaseSettings
-from dotenv import dotenv_values
 
-config = dotenv_values(".env")
+import os
+
 
 
 class CommonSettings(BaseSettings):
@@ -16,13 +16,13 @@ class ServerSettings(BaseSettings):
 
 
 class DatabaseSettings(BaseSettings):
-    DB_URL_PROD: str = config["DB_URL_PROD"]
+    DB_URL_PROD: str = os.getenv("DB_URL_PROD")
 
 
 
 class JwtTokenSettings(BaseSettings):
-    JWT_SECRET_KEY: str = config["JWT_SECRET_KEY"]
-    JWT_REFRESH_SECRET_KEY: str = config["JWT_REFRESH_SECRET_KEY"]
+    JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY")
+    JWT_REFRESH_SECRET_KEY: str = os.getenv("JWT_REFRESH_SECRET_KEY")
     ALGORITHM: str = "HS256"
 
 
