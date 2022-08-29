@@ -1,3 +1,4 @@
+from operator import truediv
 from fastapi import HTTPException, status
 from fastapi_sqlalchemy import db
 from api.users.endpoints.serializers import User, Login
@@ -13,15 +14,15 @@ class UserSignupHandler:
         self.new_user = user
 
     def is_strong_password(self):
-        return (
-            len(self.new_user.password) >= 8
-            and re.search(r"\d", self.new_user.password)
-            and re.search(r"[A-Z]", self.new_user.password)
-        )
+        if len(self.new_user.password) >= 8:
+            return True
+        return False
 
     def is_valid_email(self):
         email_regex = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
-        return re.fullmatch(email_regex, self.new_user.email)
+        if re.fullmatch(email_regex, self.new_user.email):
+            return True
+        return False
 
     def validate_input(self):
         if (
