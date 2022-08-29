@@ -7,7 +7,7 @@ import os
 
 class CommonSettings(BaseSettings):
     APP_NAME: str = "salt-task"
-    DEBUG_MODE: bool = FALSE
+    DEBUG_MODE: bool = False
 
 
 class ServerSettings(BaseSettings):
