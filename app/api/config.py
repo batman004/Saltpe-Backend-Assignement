@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from pickle import FALSE
 from pydantic import BaseSettings
 from dotenv import dotenv_values
 
@@ -7,7 +7,7 @@ config = dotenv_values(".env")
 
 class CommonSettings(BaseSettings):
     APP_NAME: str = "salt-task"
-    DEBUG_MODE: bool = True
+    DEBUG_MODE: bool = FALSE
 
 
 class ServerSettings(BaseSettings):
@@ -16,9 +16,8 @@ class ServerSettings(BaseSettings):
 
 
 class DatabaseSettings(BaseSettings):
-    DB_URL_DEV: str = config["DB_URL_DEV"]
     DB_URL_PROD: str = config["DB_URL_PROD"]
-    DB_NAME: str = config["DB_NAME"]
+
 
 
 class JwtTokenSettings(BaseSettings):
