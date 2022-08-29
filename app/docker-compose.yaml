@@ -1,28 +1,36 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  server:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - .:/backend
-    command: uvicorn main:app --reload --workers 1 --host 0.0.0.0 --port 8000
-    ports:
-      - 8000:8000
-    depends_on:
-      - db
-
   db:
-    image: postgres:13-alpine
+    build:
+      dockerfile: db.Dockerfile
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-      - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
-
     env_file:
       - .env
     ports:
       - 5432:5432
+
+  server:
+    build:
+      dockerfile: server.Dockerfile
+    command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    env_file:
+      - .env
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
 
 volumes:
     postgres_data:
