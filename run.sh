@@ -1,9 +1,7 @@
 cd app
 
-docker-compose --env-file .env  up --build
+docker-compose run server alembic revision --autogenerate -m "First migration"
 
-alembic init
+docker-compose run server alembic upgrade head
 
-docker-compose run web alembic revision --autogenerate -m "First migration"
-
-docker-compose run web alembic upgrade head
+docker-compose run server

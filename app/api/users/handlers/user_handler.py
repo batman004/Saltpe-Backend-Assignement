@@ -1,7 +1,5 @@
-from operator import truediv
 from fastapi import HTTPException, status
 from fastapi_sqlalchemy import db
-from api.users.endpoints.serializers import User, Login
 from api.users.endpoints.models import User as UserModel
 from api.users.auth.hashing import Hash
 from api.users.auth.jwt import create_access_token, create_refresh_token

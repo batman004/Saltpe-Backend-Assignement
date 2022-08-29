@@ -9,7 +9,7 @@ from api.config import settings
 
 app = FastAPI()
 
-app.add_middleware(DBSessionMiddleware, db_url=settings.DB_URL_DEV)
+app.add_middleware(DBSessionMiddleware, db_url=settings.DB_URL_PROD)
 
 app.add_middleware(
     CORSMiddleware,
@@ -23,6 +23,12 @@ app.add_middleware(
 @app.get("/")
 def read_root():
     return {"message": "welcome to salt-task-backend"}
+
+
+@app.on_event("shutdown")
+def clear_blacklist_db():
+    with open("api/users/utils/blacklist_db.txt", "w") as file:
+        pass
 
 
 app.include_router(user_router, tags=["users"], prefix="/user")
