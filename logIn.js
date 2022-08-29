@@ -1,4 +1,4 @@
-const HOST = ''
+const HOST = 'http://139.59.88.210:8000'
 const logInForm = document.getElementById('logIn')
 
 class LogInHandler {

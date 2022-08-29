@@ -1,8 +1,8 @@
-const HOST = 'https://f2786ec234e1.ngrok.io'
+const HOST = 'http://139.59.88.210:8000'
 const signUpForm = document.getElementById('logIn')
 
 class SignUpHandler {
-    static loginRoute = `${HOST}/user/login`
+    static loginRoute = `${HOST}/user/signup`
 
     static logIn() {
         window.alert('Logged In Successfully')
