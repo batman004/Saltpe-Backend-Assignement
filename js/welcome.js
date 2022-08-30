@@ -69,6 +69,6 @@ async function logout(data = {}) {
     };
 
     const response = await fetch(logoutRoute, myInit)
-    return response.json()
+    return await response.json()
 }
 
