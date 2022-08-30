@@ -69,8 +69,8 @@ class SignUpHandler {
 
 }
 
-class FormHandler {
-    static handleLogInSubmitEvt(evt) {
+class SignupFormHandler {
+    static handleSignupSubmitEvt(evt) {
         evt.preventDefault()
         const formElements = signUpForm.elements
         const user = {}
@@ -85,4 +85,4 @@ class FormHandler {
     }
 }
 
-signUpForm.onsubmit = FormHandler.handleLogInSubmitEvt
+signUpForm.onsubmit = SignupFormHandler.handleSignupSubmitEvt

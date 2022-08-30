@@ -76,7 +76,7 @@ class LogInHandler {
     }
 }
 
-class FormHandler {
+class LoginFormHandler {
     static handleLogInSubmitEvt(evt) {
         evt.preventDefault()
         const formElements = logInForm.elements
@@ -84,8 +84,12 @@ class FormHandler {
         const email = formElements['email'].value
         const password = formElements['password'].value
 
+        if(!email || password){
+            window.alert('Enter credentials')
+        }
+
         LogInHandler.getAuthToken({email, password}).then()
     }
 }
 
-logInForm.onsubmit = FormHandler.handleLogInSubmitEvt
+logInForm.onsubmit = LoginFormHandler.handleLogInSubmitEvt
