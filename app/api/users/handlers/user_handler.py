@@ -105,12 +105,10 @@ class UserLoginHandler:
                 .first()
             )
             if user_active.disabled == False:
-                logged_in =  self.generate_token()
-                logged_in['status'] = 'already logged in'
-                return logged_in
+                return True
             else:
                 return False
-
+ 
     def login_user(self):
         if not self.is_active():
             try:
@@ -124,6 +122,10 @@ class UserLoginHandler:
             except:
                 raise user_active.error
 
+        else:
+            logged_in =  self.generate_token()
+            logged_in['status'] = 'already logged in'
+            return logged_in
 
 class UserLogoutHandler:
     def __init__(self, current_user):
