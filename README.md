@@ -10,7 +10,7 @@ Backend REST API
 
 Frontend
  - HTML, CSS and JS 
- - Deployed on Cloudflare Pages
+ - Deployed on Cloudflare Pages at [Link](https://saltpe-backend-assignment.pages.dev/)
 
 ### API Routes
 
