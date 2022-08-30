@@ -9,7 +9,7 @@ Backend REST API
  - Deployed on [Railway](https://railway.app/) at [endpoint](https://saltpe-backend-assignment-production.up.railway.app/)
 
 Frontend
- - HTML, CSS and JS 
+ - HTML, Bootstrap CSS and JS 
  - Deployed on Cloudflare Pages at [Link](https://saltpe-backend-assignment.pages.dev/)
 
 ### API Routes
