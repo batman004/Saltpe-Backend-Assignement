@@ -23,6 +23,51 @@ Routes | HTTP | Description
 **/user/me** | `GET` | Get user data for currently logged in user(based on token verification)
 **/user/signup** | `POST` | Signup a new user
 
+
+### Directory Structure
+
+```
+├── README.md
+├── app
+│   ├── __init__.py
+│   ├── alembic
+│   │   ├── README
+│   │   ├── env.py
+│   │   ├── script.py.mako
+│   │   └── versions
+│   │       └── 9ed0fc4984ca_first_migration.py
+│   ├── api
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   └── users
+│   │       ├── __init__.py
+│   │       ├── auth
+│   │       │   ├── __init__.py
+│   │       │   ├── hashing.py
+│   │       │   ├── jwt.py
+│   │       │   └── utils.py
+│   │       ├── endpoints
+│   │       │   ├── __init__.py
+│   │       │   ├── models.py
+│   │       │   ├── routers.py
+│   │       │   └── serializers.py
+│   │       ├── handlers
+│   │       │   ├── __init__.py
+│   │       │   └── user_handler.py
+│   │       └── utils
+│   │           ├── __init__.py
+│   │           ├── blacklist_db.txt
+│   │           └── blacklist_tokens.py
+│   ├── db
+│   │   └── 01-init.sh
+│   ├── docker-compose.yaml
+│   ├── main.py
+│   ├── requirements.txt
+│   └── server.Dockerfile
+├── build.sh
+└── run.sh
+```
+
 ### Steps to run
 Open your terminal and run the following commands
 ```
