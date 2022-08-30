@@ -1,9 +1,17 @@
 # Salt-Backend-Assignement
 
-### Tech Stack
+### Technologies Used
 Backend REST API
  - Python(FastAPI)
  - PostgreSQL
+ - JWT Tokens for authorization
+ - Containerized via Docker 
+ - Deployed on [Railway](https://railway.app/) at [endpoint](https://saltpe-backend-assignment-production.up.railway.app/)
+
+Frontend
+ - HTML, CSS and JS 
+ - Deployed on Cloudflare Pages
+
 ### API Routes
 
 #### `users` Module
@@ -16,7 +24,7 @@ Routes | HTTP | Description
 **/user/signup** | `POST` | Signup a new user
 
 ### Steps to run
-Open terminal and run the following commands
+Open your terminal and run the following commands
 ```
 git clone https://github.com/batman004/Saltpe-Backend-Assignement.git
 cd Saltpe-Backend-Assignement
