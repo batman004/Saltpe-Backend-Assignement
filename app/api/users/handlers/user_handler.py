@@ -1,5 +1,6 @@
 from fastapi import HTTPException, status
 from fastapi_sqlalchemy import db
+from sqlalchemy.exc import SQLAlchemyError
 from api.users.endpoints.models import User as UserModel
 from api.users.auth.hashing import Hash
 from api.users.auth.jwt import create_access_token, create_refresh_token
@@ -36,11 +37,15 @@ class UserSignupHandler:
             return True
 
     def user_exists(self):
-        user_search = (
-            db.session.query(UserModel.email)
-            .filter_by(email=self.new_user.email)
-            .first()
-        )
+        try:
+            user_search = (
+                db.session.query(UserModel.email)
+                .filter_by(email=self.new_user.email)
+                .first()
+            )
+        except SQLAlchemyError as e:
+                error = str(e.__dict__['orig'])
+                return error
 
         if user_search is not None:
             raise HTTPException(
@@ -63,8 +68,9 @@ class UserSignupHandler:
                 )
                 db.session.add(db_user)
                 db.session.commit()
-            except:
-                raise db_user.error
+            except SQLAlchemyError as e:
+                error = str(e.__dict__['orig'])
+                return error
 
 
 class UserLoginHandler:
@@ -73,9 +79,14 @@ class UserLoginHandler:
 
     # check if detailes entered are consistent with DB
     def verify_credentials(self):
-        user_login = (
-            db.session.query(UserModel).filter_by(email=self.user_login.email).first()
-        )
+        try:
+            user_login = (
+                db.session.query(UserModel).filter_by(email=self.user_login.email).first()
+            )
+        except SQLAlchemyError as e:
+            error = str(e.__dict__['orig'])
+            return error
+
         if user_login is None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -90,11 +101,16 @@ class UserLoginHandler:
     # check if user is already logged in
     def is_active(self):
         if self.verify_credentials():
-            user_active = (
-                db.session.query(UserModel.disabled)
-                .filter_by(email=self.user_login.email)
-                .first()
-            )
+            try:
+                user_active = (
+                    db.session.query(UserModel.disabled)
+                    .filter_by(email=self.user_login.email)
+                    .first()
+                )
+            except SQLAlchemyError as e:
+                error = str(e.__dict__['orig'])
+                return error
+                
             if user_active.disabled == False:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST, detail="already logged in"
@@ -119,8 +135,9 @@ class UserLoginHandler:
                 )
                 db.session.commit()
                 return self.generate_token()
-            except:
-                raise user_active.error
+            except SQLAlchemyError as e:
+                error = str(e.__dict__['orig'])
+                return error
 
 
 class UserLogoutHandler:
@@ -136,8 +153,9 @@ class UserLogoutHandler:
             )
             db.session.commit()
             return True
-        except:
-            raise user_logout.error
+        except SQLAlchemyError as e:
+            error = str(e.__dict__['orig'])
+            return error
 
     def blacklist_token(self):
         if add_blacklist_token(self.current_user["token"]):
