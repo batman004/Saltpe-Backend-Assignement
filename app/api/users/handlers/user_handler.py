@@ -88,6 +88,14 @@ class UserLoginHandler:
             )
         return True
 
+    # generate token after validation and verification
+    def generate_token(self):
+        return {
+            "access_token": create_access_token(self.user_login.email),
+            "refresh_token": create_refresh_token(self.user_login.email),
+        }
+
+
     # check if user is already logged in
     def is_active(self):
         if self.verify_credentials():
@@ -97,16 +105,11 @@ class UserLoginHandler:
                 .first()
             )
             if user_active.disabled == False:
-                return get_current_user()
+                logged_in =  self.generate_token(self)
+                logged_in['status'] = 'already logged in'
+                return logged_in
             else:
                 return False
-
-    # generate token after validation and verification
-    def generate_token(self):
-        return {
-            "access_token": create_access_token(self.user_login.email),
-            "refresh_token": create_refresh_token(self.user_login.email),
-        }
 
     def login_user(self):
         if not self.is_active():
