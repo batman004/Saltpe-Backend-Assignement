@@ -28,8 +28,10 @@ class LogInHandler {
         }
 
         try {
+
             res = await LogInHandler.postData(user)
             await LogInHandler.logIn(res.access_token, res.refresh_token)
+            
         } catch (e) {
             console.error(e)
             errorMessage.removeAttribute('hidden')
@@ -84,14 +86,8 @@ class LoginFormHandler {
         const email = formElements['email'].value
         const password = formElements['password'].value
 
-        if(!email || password){
-            window.alert('Enter credentials')
-        }
-
-        else
-        { 
-            LogInHandler.getAuthToken({email, password}).then()
-        }
+        LogInHandler.getAuthToken({email, password}).then()
+        
     }
 }
 
