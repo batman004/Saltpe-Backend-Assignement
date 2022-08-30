@@ -88,7 +88,10 @@ class LoginFormHandler {
             window.alert('Enter credentials')
         }
 
-        LogInHandler.getAuthToken({email, password}).then()
+        else
+        { 
+            LogInHandler.getAuthToken({email, password}).then()
+        }
     }
 }
 
