@@ -18,6 +18,9 @@ class LogInHandler {
         localStorage.setItem('accessToken', user.token)
         localStorage.setItem('refreshToken', refreshToken)
 
+        console.log(localStorage.getItem('username'), localStorage.getItem('accessToken'))
+
+
         window.open('welcome.html')
         window.close()
     }
@@ -30,7 +33,11 @@ class LogInHandler {
         try {
 
             res = await LogInHandler.postData(user)
-            await LogInHandler.logIn(res.access_token, res.refresh_token)
+ 
+            if(!res.detail)
+            {
+                await LogInHandler.logIn(res.access_token, res.refresh_token)
+            }
             
         } catch (e) {
             console.error(e)
@@ -54,7 +61,9 @@ class LogInHandler {
         };
 
         const response = await fetch(url, myInit)
-        return response.json()
+
+        console.log(response.status)
+        return await response.json()
     }
 
     static async whoAmI(accessToken) {
