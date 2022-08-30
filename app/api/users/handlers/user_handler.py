@@ -4,6 +4,7 @@ from api.users.endpoints.models import User as UserModel
 from api.users.auth.hashing import Hash
 from api.users.auth.jwt import create_access_token, create_refresh_token
 from api.users.utils.blacklist_tokens import add_blacklist_token
+from api.users.auth.utils import get_current_user
 import re
 
 
@@ -96,9 +97,7 @@ class UserLoginHandler:
                 .first()
             )
             if user_active.disabled == False:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST, detail="already logged in"
-                )
+                return get_current_user()
             else:
                 return False
 
