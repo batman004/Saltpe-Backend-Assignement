@@ -13,11 +13,8 @@ class SignUpHandler {
         localStorage.setItem('username', user.username)
     }
 
-    static signUp(newUser, accessToken, refreshToken) {
+    static signUp(newUser) {
         SignUpHandler.setUser(newUser)
-
-        localStorage.setItem('accessToken', accessToken)
-        localStorage.setItem('refreshToken', refreshToken)
 
         window.open('welcome.html')
         window.close()
@@ -41,8 +38,10 @@ class SignUpHandler {
 
             if (res.status !== CREATED) throw `Error: ${JSON.stringify(res.detail)}`
 
-            const {access_token, refresh_token} = await SignUpHandler.getAuthToken(userData)
-            await SignUpHandler.signUp(userData, access_token, refresh_token)
+            window.alert('signup sucessfull !')
+            window.open('index.html')
+            window.close()
+
         } catch (e) {
             console.error(e)
             errorMessage.removeAttribute('hidden')
@@ -50,14 +49,10 @@ class SignUpHandler {
     }
 
     static async postData(data = {}, url = SignUpHandler.signupRoute) {
-        const token = localStorage.getItem('accessToken')
-
-        if (!token) throw 'Auth Token not found'
 
         const myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
-        myHeaders.append('Authorization', `Bearer ${token}`)
-
+  
         const myInit = {
             method: 'POST',
             mode: 'cors',
@@ -72,25 +67,6 @@ class SignUpHandler {
         return response.json()
     }
 
-    static async whoAmI(accessToken, url = SignUpHandler.whoAmIRoute) {
-        /*
-        * user ->
-        *   username: str
-        *   email: str
-        *   token: str
-        * */
-
-        const myHeaders = new Headers();
-        myHeaders.append('Content-Type', 'application/json');
-        myHeaders.append('Authorization', `Bearer ${accessToken}`)
-
-        const myInit = {
-            method: 'GET', headers: myHeaders, mode: 'cors', cache: 'default',
-        };
-
-        const user = await fetch(url, myInit)
-        return user.json()
-    }
 }
 
 class FormHandler {
