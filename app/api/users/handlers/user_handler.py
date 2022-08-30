@@ -1,5 +1,6 @@
 from fastapi import HTTPException, status
 from fastapi_sqlalchemy import db
+from sqlalchemy.exc import SQLAlchemyError
 from api.users.endpoints.models import User as UserModel
 from api.users.auth.hashing import Hash
 from api.users.auth.jwt import create_access_token, create_refresh_token
@@ -64,8 +65,9 @@ class UserSignupHandler:
                 )
                 db.session.add(db_user)
                 db.session.commit()
-            except:
-                raise db_user.error
+            except SQLAlchemyError as e:
+                error = str(e.__dict__["orig"])
+                return error
 
 
 class UserLoginHandler:
@@ -95,7 +97,6 @@ class UserLoginHandler:
             "refresh_token": create_refresh_token(self.user_login.email),
         }
 
-
     # check if user is already logged in
     def is_active(self):
         if self.verify_credentials():
@@ -108,7 +109,7 @@ class UserLoginHandler:
                 return True
             else:
                 return False
- 
+
     def login_user(self):
         if not self.is_active():
             try:
@@ -118,14 +119,15 @@ class UserLoginHandler:
                     .update({"disabled": False})
                 )
                 db.session.commit()
-                return self.generate_token()
-            except:
-                raise user_active.error
+            except SQLAlchemyError as e:
+                error = str(e.__dict__["orig"])
+                return error
 
         else:
-            logged_in =  self.generate_token()
-            logged_in['status'] = 'already logged in'
+            logged_in = self.generate_token()
+            logged_in["status"] = "already logged in"
             return logged_in
+
 
 class UserLogoutHandler:
     def __init__(self, current_user):
@@ -140,8 +142,9 @@ class UserLogoutHandler:
             )
             db.session.commit()
             return True
-        except:
-            raise user_logout.error
+        except SQLAlchemyError as e:
+            error = str(e.__dict__["orig"])
+            return error
 
     def blacklist_token(self):
         if add_blacklist_token(self.current_user["token"]):
