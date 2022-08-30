@@ -105,7 +105,7 @@ class UserLoginHandler:
                 .first()
             )
             if user_active.disabled == False:
-                logged_in =  self.generate_token(self)
+                logged_in =  self.generate_token()
                 logged_in['status'] = 'already logged in'
                 return logged_in
             else:
