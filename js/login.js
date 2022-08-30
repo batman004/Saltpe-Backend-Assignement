@@ -62,7 +62,12 @@ class LogInHandler {
 
         const response = await fetch(url, myInit)
 
-        console.log(response.status)
+
+        if (response.status !=200)
+        {
+            window.alert((await response.json()).detail)
+        }
+
         return await response.json()
     }
 
