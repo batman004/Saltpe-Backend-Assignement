@@ -112,6 +112,7 @@ class UserLoginHandler:
 
     def login_user(self):
         if not self.is_active():
+            print("new login")
             try:
                 user_active = (
                     db.session.query(UserModel)
@@ -119,6 +120,7 @@ class UserLoginHandler:
                     .update({"disabled": False})
                 )
                 db.session.commit()
+                return self.generate_token()
             except SQLAlchemyError as e:
                 error = str(e.__dict__["orig"])
                 return error
