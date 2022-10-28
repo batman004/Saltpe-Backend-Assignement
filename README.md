@@ -1,5 +1,7 @@
 # Salt-Backend-Assignement
 
+⚠️ Deployment Paused for now
+
 ### Technologies Used
 Backend REST API
  - Python(FastAPI)
